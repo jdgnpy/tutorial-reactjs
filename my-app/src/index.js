@@ -20,7 +20,7 @@ class Square extends React.Component {
 
 function Square(props){
   return(
-    <button className="square" onClick={props.onClick}>
+    <button className="square" onClick={props.onClick}> 
       {props.value}
     </button>
   );
@@ -32,14 +32,18 @@ class Board extends React.Component {
       super(props);
       this.state = {
         squares : Array(9).fill(null), //array para guardar los valores de la tabla
+        xIsNext: true, //para saber de quien es el turno y tambien para setear el primer movimiento a X
       };
     }
 
 
     handleClick(i){
       const squares = this.state.squares.slice(); //crea un nuevo array con los mismos datos
-      squares[i] = 'X'; //guarda el nuevo value en la posicion (el lugar donde se marco la X)
-      this.setState({squares:squares}); //se actualiza el state con el nuevo valor
+      squares[i] = this.state.xIsNext ? 'X' : 'O'; //guarda el nuevo value en la posicion (el lugar donde se marco la X o O)
+      this.setState({
+        squares:squares, //se actualiza el state para saber los datos del tablero
+        xIsNext: !this.state.xIsNext, //se actualiza el state para saber quien sigue
+      }); 
     }
 
 
@@ -53,7 +57,7 @@ class Board extends React.Component {
     }
   
     render() {
-      const status = 'Next player: X';
+      const status = 'Next player: '+ (this.state.xIsNext ? 'X' : 'O');
   
       return (
         <div>
