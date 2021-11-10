@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+/* Se dejara de usar la clase Square y se utilizara una funcion
 class Square extends React.Component {
 
   render() {
@@ -15,7 +16,16 @@ class Square extends React.Component {
     );
   }
 }
-  
+*/ 
+
+function Square(props){
+  return(
+    <button className="square" onClick={props.onClick}>
+      {props.value}
+    </button>
+  );
+}
+
 
 class Board extends React.Component {
     constructor(props){
@@ -24,6 +34,14 @@ class Board extends React.Component {
         squares : Array(9).fill(null), //array para guardar los valores de la tabla
       };
     }
+
+
+    handleClick(i){
+      const squares = this.state.squares.slice(); //crea un nuevo array con los mismos datos
+      squares[i] = 'X'; //guarda el nuevo value en la posicion (el lugar donde se marco la X)
+      this.setState({squares:squares}); //se actualiza el state con el nuevo valor
+    }
+
 
     renderSquare(i) {
       return (
