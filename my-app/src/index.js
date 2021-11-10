@@ -3,19 +3,14 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class Square extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      value : null,
-    };
-  }
 
   render() {
     return (
       <button 
-      className="square" 
-      onClick={() => this.setState({value : 'X'})}>
-        {this.state.value}
+        className="square" 
+        onClick={() => this.props.onClick()} //llama al evento onClick (handleClick)
+      > 
+        {this.props.value}
       </button>
     );
   }
@@ -26,12 +21,17 @@ class Board extends React.Component {
     constructor(props){
       super(props);
       this.state = {
-        squares : Array(9).fill(null),
+        squares : Array(9).fill(null), //array para guardar los valores de la tabla
       };
     }
 
     renderSquare(i) {
-      return <Square value={i}/>;
+      return (
+        <Square 
+          value={this.state.squares[i]} //cargo el valor de la celda en value
+          onClick={() => this.handleClick(i)} //cargo el handleClick en onClick
+        />
+      );
     }
   
     render() {
