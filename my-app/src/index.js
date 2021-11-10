@@ -28,6 +28,7 @@ function Square(props){
 
 
 class Board extends React.Component {
+    /*
     constructor(props){
       super(props);
       this.state = {
@@ -35,9 +36,12 @@ class Board extends React.Component {
         xIsNext: true, //para saber de quien es el turno y tambien para setear el primer movimiento a X
       };
     }
-
+    */
 
     handleClick(i){
+      
+      const history = this.state.history;
+      const current = history[history.length -1];
       const squares = this.state.squares.slice(); //crea un nuevo array con los mismos datos
       
       if(calculateWinner(squares) || squares[i]){ //en caso de que haya un ganador o la celda este con un valor se sale de la funcion
@@ -46,7 +50,9 @@ class Board extends React.Component {
       
       squares[i] = this.state.xIsNext ? 'X' : 'O'; //guarda el nuevo value en la posicion (el lugar donde se marco la X o O)
       this.setState({
-        squares:squares, //se actualiza el state para saber los datos del tablero
+        history: history.concat([{ //se concatena el historial con lo nuevo
+          squares:squares,
+        }]),
         xIsNext: !this.state.xIsNext, //se actualiza el state para saber quien sigue
       }); 
     }
@@ -55,14 +61,14 @@ class Board extends React.Component {
     renderSquare(i) {
       return (
         <Square 
-          value={this.state.squares[i]} //cargo el valor de la celda en value
-          onClick={() => this.handleClick(i)} //cargo el handleClick en onClick
+          value={this.props.squares[i]} //cargo el valor de la celda en value
+          onClick={() => this.props.onClick(i)} //cargo la funcion onClick
         />
       );
     }
   
     render() {
-      
+      /*
       //se verifica si hay algun ganador, en caso de que no, se muestra el turno del siguiente
       const winner = calculateWinner(this.state.squares);
       let status;
@@ -71,10 +77,10 @@ class Board extends React.Component {
       }else{
         status = 'Next player: '+ (this.state.xIsNext ? 'X' : 'O');
       }
-
+      */
       return (
         <div>
-          <div className="status">{status}</div>
+          {/* <div className="status">{status}</div> */}
           <div className="board-row">
             {this.renderSquare(0)}
             {this.renderSquare(1)}
@@ -97,14 +103,42 @@ class Board extends React.Component {
   
 
 class Game extends React.Component {
+
+  //para el historial de movimientos
+  constructor(props){
+    super(props);
+    this.state = {
+      history: [{
+        squares: Array(9).fill(null),
+      }],
+      xIsNext: true,
+    };
+  }
+
     render() {
+      //cargo los datos a utilizar para el historial y guardo el estado de la partida
+      const history = this.state.history;
+      const current = history[history.length - 1];
+      const winner = calculateWinner(current.squares);
+      let status;
+      if(winner){
+        status = 'Winner: ' + winner;
+      }else{
+        status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+      }
+
+
       return (
         <div className="game">
           <div className="game-board">
-            <Board />
+            <Board 
+              // se envian los valores actuales del tablero y el evento click con la pos
+              squares ={current.squares}
+              onClick={(i) => this.handleClick(i)}
+            />
           </div>
           <div className="game-info">
-            <div>{/* status */}</div>
+            <div>{status}</div>
             <ol>{/* TODO */}</ol>
           </div>
         </div>
