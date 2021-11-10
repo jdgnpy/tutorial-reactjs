@@ -39,6 +39,11 @@ class Board extends React.Component {
 
     handleClick(i){
       const squares = this.state.squares.slice(); //crea un nuevo array con los mismos datos
+      
+      if(calculateWinner(squares) || squares[i]){ //en caso de que haya un ganador o la celda este con un valor se sale de la funcion
+        return;
+      }
+      
       squares[i] = this.state.xIsNext ? 'X' : 'O'; //guarda el nuevo value en la posicion (el lugar donde se marco la X o O)
       this.setState({
         squares:squares, //se actualiza el state para saber los datos del tablero
