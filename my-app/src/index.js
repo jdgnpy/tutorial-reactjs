@@ -38,26 +38,6 @@ class Board extends React.Component {
     }
     */
 
-    handleClick(i){
-      
-      const history = this.state.history;
-      const current = history[history.length -1];
-      const squares = this.state.squares.slice(); //crea un nuevo array con los mismos datos
-      
-      if(calculateWinner(squares) || squares[i]){ //en caso de que haya un ganador o la celda este con un valor se sale de la funcion
-        return;
-      }
-      
-      squares[i] = this.state.xIsNext ? 'X' : 'O'; //guarda el nuevo value en la posicion (el lugar donde se marco la X o O)
-      this.setState({
-        history: history.concat([{ //se concatena el historial con lo nuevo
-          squares:squares,
-        }]),
-        xIsNext: !this.state.xIsNext, //se actualiza el state para saber quien sigue
-      }); 
-    }
-
-
     renderSquare(i) {
       return (
         <Square 
@@ -111,14 +91,44 @@ class Game extends React.Component {
       history: [{
         squares: Array(9).fill(null),
       }],
+      stepNumber: 0,
       xIsNext: true,
     };
   }
 
+  handleClick(i){
+      
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
+    const current = history[history.length -1];
+    const squares = current.squares.slice(); //crea un nuevo array con los mismos datos
+    
+    if(calculateWinner(squares) || squares[i]){ //en caso de que haya un ganador o la celda este con un valor se sale de la funcion
+      return;
+    }
+    
+    squares[i] = this.state.xIsNext ? 'X' : 'O'; //guarda el nuevo value en la posicion (el lugar donde se marco la X o O)
+    this.setState({
+      history: history.concat([{ //se concatena el historial con lo nuevo
+        squares:squares,
+      }]),
+      stepNumber: history.length,
+      xIsNext: !this.state.xIsNext, //se actualiza el state para saber quien sigue
+    }); 
+  }
+
+
+  jumpTo(step){
+    this.setState({
+      stepNumber : step,
+      xIsNext: (step % 2) === 0, //se le carga true en caso de que sea par el turno
+    });
+  }
+
+
     render() {
       //cargo los datos a utilizar para el historial y guardo el estado de la partida
       const history = this.state.history;
-      const current = history[history.length - 1];
+      const current = history[this.state.stepNumber];
       const winner = calculateWinner(current.squares);
 
 
@@ -127,8 +137,8 @@ class Game extends React.Component {
       const moves = history.map((step, move) => {
         const desc = move ? 'Go to move #' + move : 'Go to game start';
         return(
-          <li>
-            <button onclick={() => this.jumpTo(move)}> {desc} </button>
+          <li key = {move}>
+            <button onClick={() => this.jumpTo(move)}> {desc} </button>
           </li>
         );
       });
@@ -136,10 +146,10 @@ class Game extends React.Component {
 
       //verificacion si ya hay ganador o sigue la partida
       let status;
-      if(winner){
-        status = 'Winner: ' + winner;
-      }else{
-        status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+      if (winner) {
+        status = "Winner: " + winner;
+      } else {
+        status = "Next player: " + (this.state.xIsNext ? "X" : "O");
       }
 
 
@@ -149,7 +159,7 @@ class Game extends React.Component {
             <Board 
               // se envian los valores actuales del tablero y el evento click con la pos
               squares ={current.squares}
-              onClick={(i) => this.handleClick(i)}
+              onClick={i => this.handleClick(i)}
             />
           </div>
           <div className="game-info">
