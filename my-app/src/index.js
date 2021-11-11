@@ -2,21 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-/* Se dejara de usar la clase Square y se utilizara una funcion
-class Square extends React.Component {
-
-  render() {
-    return (
-      <button 
-        className="square" 
-        onClick={() => this.props.onClick()} //llama al evento onClick (handleClick)
-      > 
-        {this.props.value}
-      </button>
-    );
-  }
-}
-*/ 
 
 function Square(props){
   return(
@@ -28,16 +13,6 @@ function Square(props){
 
 
 class Board extends React.Component {
-    /*
-    constructor(props){
-      super(props);
-      this.state = {
-        squares : Array(9).fill(null), //array para guardar los valores de la tabla
-        xIsNext: true, //para saber de quien es el turno y tambien para setear el primer movimiento a X
-      };
-    }
-    */
-
     renderSquare(i) {
       return (
         <Square 
@@ -48,16 +23,6 @@ class Board extends React.Component {
     }
   
     render() {
-      /*
-      //se verifica si hay algun ganador, en caso de que no, se muestra el turno del siguiente
-      const winner = calculateWinner(this.state.squares);
-      let status;
-      if(winner){
-        status = 'Winner ' + winner;
-      }else{
-        status = 'Next player: '+ (this.state.xIsNext ? 'X' : 'O');
-      }
-      */
       return (
         <div>
           {/* <div className="status">{status}</div> */}
@@ -199,7 +164,7 @@ function calculateWinner(squares){
     // entonces retorna X
     // asi hasta encontrar alguno que encaje el mismo valor en las 3 posiciones
     if(squares[a] && squares[a] === squares[b] && squares[a] === squares[c]){ 
-      return squares [a];
+      return squares[a];
     }
   }
 
