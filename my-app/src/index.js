@@ -120,6 +120,21 @@ class Game extends React.Component {
       const history = this.state.history;
       const current = history[history.length - 1];
       const winner = calculateWinner(current.squares);
+
+
+      //step es para el valor del elemento y move es para el index, estos de history
+      //luego muestra una lista de botones para poder ir a un movimiento anterior
+      const moves = history.map((step, move) => {
+        const desc = move ? 'Go to move #' + move : 'Go to game start';
+        return(
+          <li>
+            <button onclick={() => this.jumpTo(move)}> {desc} </button>
+          </li>
+        );
+      });
+
+
+      //verificacion si ya hay ganador o sigue la partida
       let status;
       if(winner){
         status = 'Winner: ' + winner;
@@ -139,7 +154,7 @@ class Game extends React.Component {
           </div>
           <div className="game-info">
             <div>{status}</div>
-            <ol>{/* TODO */}</ol>
+            <ol>{moves}</ol>
           </div>
         </div>
       );
